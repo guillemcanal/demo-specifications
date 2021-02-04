@@ -1,0 +1,53 @@
+= The Specification pattern applied to a Repository
+
+The Specification pattern consists of reusable business rules which can be composed together and evaluated against one or multiple candidates.
+
+When used with the https://martinfowler.com/eaaCatalog/repository.html[Repository pattern], the specification is used to **query** a datasource.
+
+NOTE: Github don't supports the AsciiDoc `include` directive for some obscure reasons, as a result, you won't be able to see the code blocks below 🤦 An https://github.com/github/markup/issues/1095[issue] is pending on the Github repository to fix that behavior.
+
+== Simple use case
+
+Let's consider a simple `User` model:
+
+[source,php]
+----
+include::src/Domain/Model/User.php[tags=class,indent=0]
+----
+
+**Given** we want to find all `User` matching a business `Specification`, we declare the following interface:
+
+[source,php]
+----
+include::src/Domain/Repository/UserRepository.php[tags=class,indent=0]
+----
+
+**With** the following list of users:
+
+[source,php]
+----
+include::tests/UserRepositoryTest.php[tags=users,indent=0]
+----
+
+**When** combining...
+
+the `IsActive` specification
+
+[source,php]
+----
+include::src/Domain/Specification/IsActive.php[tags=class,indent=0]
+----
+
+with the `WithRole` specification
+
+[source,php]
+----
+include::src/Domain/Specification/WithRole.php[tags=class,indent=0]
+----
+
+**Then** should obtains a list of **admin** `User` which are **active**
+
+[source,php]
+----
+include::tests/UserRepositoryTest.php[tags=test_active_users,indent=0]
+----
